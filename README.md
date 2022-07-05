@@ -124,7 +124,7 @@ Please choose an option:
 
 ## Database Schema
 
-![Database schema](./img/database_schema.png)
+![Database schema](./database_schema.png)
 
 ### Users table
 
@@ -216,7 +216,7 @@ In a real-world scenario the server would be running on a centralized machine wh
 - Whenever possible, try to eliminate places where the error could be hiding and narrow it down to a specific class or method
 - Refer to the debugging flowchart below for additional tips
 
-![Debugging Flowchart](./img/APIDebugging.png)
+![Debugging Flowchart](./APIDebugging.png)
 
 ## Code Review Criteria
 
@@ -227,6 +227,6 @@ In a real-world scenario the server would be running on a centralized machine wh
 - You should not put all of your client-side API code inside of the Auth Service
 - You have no restrictions around the use of static or console statements this capstone
 - You may modify any pre-provided code to suit your needs
-- Try to follow SOLID principles, keep methods small, and keep classes focused on a single responsibility principle
+- Keep methods small, and keep classes focused on a single responsibility principle
 - I may ask you to show me your Postman history around this project so I can see the types of requests you made to test your server
 - Code Review may be done in groups of teams or even with the class as a whole
