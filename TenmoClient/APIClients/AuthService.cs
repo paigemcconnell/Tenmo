@@ -21,6 +21,11 @@ namespace TenmoClient
             }
         }
 
+        public void ClearAuthenticator()
+        {
+            client.Authenticator = null;
+        }
+
         //login endpoints
         public bool Register(LoginUser registerUser)
         {
@@ -52,7 +57,7 @@ namespace TenmoClient
             }
         }
 
-        public bool Login(LoginUser loginUser)
+        public API_User Login(LoginUser loginUser)
         {
             RestRequest request = new RestRequest(API_BASE_URL + "login");
             request.AddJsonBody(loginUser);
@@ -62,7 +67,8 @@ namespace TenmoClient
             if (response.ResponseStatus != ResponseStatus.Completed)
             {
                 Console.WriteLine("An error occurred communicating with the server.");
-                return false;
+
+                return null;
             }
             else if (!response.IsSuccessful)
             {
@@ -74,15 +80,13 @@ namespace TenmoClient
                 {
                     Console.WriteLine("An error response was received from the server. The status code is " + (int)response.StatusCode);
                 }
-                return false;
+                return null;
             }
             else
             {
-                UserService.SetLogin(response.Data);
-
                 client.Authenticator = new JwtAuthenticator(response.Data.Token);
 
-                return true;
+                return response.Data;
             }
         }
     }

@@ -95,8 +95,12 @@ namespace TenmoClient
                             break;
 
                         case 6: // Log in as someone else
-                            Console.WriteLine();
-                            UserService.ClearLoggedInUser(); //wipe out previous login info
+
+                            authService.ClearAuthenticator();
+
+                            // NOTE: You will need to clear any stored JWTs in other API Clients
+                            Console.WriteLine("NOT IMPLEMENTED!");
+
                             return; // Leaves the menu and should return as someone else
 
                         case 0: // Quit
@@ -128,10 +132,20 @@ namespace TenmoClient
 
         private void HandleUserLogin()
         {
-            while (!UserService.IsLoggedIn) //will keep looping until user is logged in
+            while (!authService.IsLoggedIn) //will keep looping until user is logged in
             {
                 LoginUser loginUser = consoleService.PromptForLogin();
-                authService.Login(loginUser);
+
+                // Log the user in
+                API_User authenticatedUser = authService.Login(loginUser);
+
+                if (authenticatedUser != null)
+                {
+                    string jwt = authenticatedUser.Token;
+
+                    // TODO: Do something with this JWT.
+                    Console.WriteLine("DOING NOTHING WITH JWT");
+                }
             }
         }
     }

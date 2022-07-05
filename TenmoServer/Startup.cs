@@ -31,6 +31,24 @@ namespace TenmoServer
             services.AddControllers();
 
             // Adds swagger documentation file support. See https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-3.1&tabs=visual-studio for more details
+            ConfigureSwagger(services);
+
+            // Add CORS policy allowing any origin
+            ConfigureCORS(services);
+
+            // configure jwt authentication
+            string jwtSecret = Configuration["JwtSecret"];
+            ConfigureJwtAuthentication(services, jwtSecret);
+
+            // Dependency Injection configuration
+            string connectionString = Configuration.GetConnectionString("Project");
+            services.AddSingleton((Func<IServiceProvider, ITokenGenerator>)(sp => new JwtGenerator(jwtSecret)));
+            services.AddSingleton<IPasswordHasher>(sp => new PasswordHasher());
+            services.AddSingleton<IUserDAO>(sp => new UserSqlDAO(connectionString));
+        }
+
+        private static void ConfigureSwagger(IServiceCollection services)
+        {
             services.AddSwaggerGen(s =>
             {
                 s.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
@@ -40,18 +58,20 @@ namespace TenmoServer
                     Description = "Tech Elevator's proprietary new money management system in no way related to other similarly named systems."
                 });
             });
+        }
 
-            // Add CORS policy allowing any origin
+        private static void ConfigureCORS(IServiceCollection services)
+        {
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
                 builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
+        }
 
-            string connectionString = Configuration.GetConnectionString("Project");
-
-            // configure jwt authentication
-            var key = Encoding.ASCII.GetBytes(Configuration["JwtSecret"]);
+        private static void ConfigureJwtAuthentication(IServiceCollection services, string jwtSecret)
+        {
+            var key = Encoding.ASCII.GetBytes(jwtSecret);
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap[JwtRegisteredClaimNames.Sub] = "sub";
             services.AddAuthentication(x =>
             {
@@ -71,11 +91,6 @@ namespace TenmoServer
                     NameClaimType = "name"
                 };
             });
-
-            // Dependency Injection configuration
-            services.AddSingleton<ITokenGenerator>(sp => new JwtGenerator(Configuration["JwtSecret"]));
-            services.AddSingleton<IPasswordHasher>(sp => new PasswordHasher());
-            services.AddTransient<IUserDAO>(sp => new UserSqlDAO(connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
