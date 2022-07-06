@@ -33,7 +33,7 @@ namespace TenmoClient.APIClients
         
         public AccountBalance DisplayBalance()
         {
-            RestRequest request = new RestRequest("transfer");
+            RestRequest request = new RestRequest("transfer/balance");
             //request.AddHeader("Authorization", "Bearer " + token); - we don't need this line because line 29 already do this
             IRestResponse<AccountBalance> response = client.Get<AccountBalance>(request);
 
@@ -55,6 +55,30 @@ namespace TenmoClient.APIClients
             return response.Data;
 
         } 
+        public List<API_User> DisplayUsers()
+        {
+            RestRequest request = new RestRequest("transfer/users");
+
+            IRestResponse<List<API_User>> response = client.Get<List<API_User>>(request);
+
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                Console.WriteLine("Could not connect to the database");
+
+                return null;
+            }
+
+            if (!response.IsSuccessful)
+            {
+                Console.WriteLine("Problem getting users: " + response.StatusDescription);
+                Console.WriteLine(response.Content);
+
+                return null;
+            }
+
+            return response.Data;
+
+        }
         
     }
 }

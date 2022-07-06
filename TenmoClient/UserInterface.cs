@@ -1,6 +1,7 @@
 ﻿using System;
 using TenmoClient.Data;
 using TenmoClient.APIClients;
+using System.Collections.Generic;
 
 namespace TenmoClient
 {
@@ -88,7 +89,8 @@ namespace TenmoClient
                             break;
 
                         case 4: // Send TE Bucks
-                            Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
+                            DisplayUsers();
+                            Console.WriteLine("Enter ID of user you are sending to:"); 
                             break;
 
                         case 5: // Request TE Bucks
@@ -160,5 +162,15 @@ namespace TenmoClient
             Console.WriteLine("Your current account balance is: " + account.Balance.ToString("C"));
         }
 
+        private List<API_User> DisplayUsers()
+        {
+            List<API_User> users = transferClient.DisplayUsers();
+
+            foreach(API_User user in users)
+            {
+            Console.WriteLine($"{user.UserId}  {user.Username}");
+            }
+            return users;
+        }
     }
 }
