@@ -19,7 +19,6 @@ namespace TenmoServer.DAO
 
         public AccountBalance DisplayBalance(string username)
         {
-
             const string sql = "SELECT a.balance FROM accounts a INNER JOIN users u ON u.user_id = a.user_id WHERE username = @username";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -30,7 +29,7 @@ namespace TenmoServer.DAO
 
                 command.Parameters.AddWithValue("@username", username);
                 decimal balance = Convert.ToDecimal(command.ExecuteScalar());  // pulling balance from sql
-                AccountBalance currentBalance = null; // new instance of account balance
+                AccountBalance currentBalance = new AccountBalance(); // new instance of account balance
                 currentBalance.Balance = balance; // setting new instances balance to the value from sql
 
                 return currentBalance; 

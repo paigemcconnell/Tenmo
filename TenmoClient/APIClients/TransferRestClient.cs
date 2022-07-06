@@ -26,15 +26,35 @@ namespace TenmoClient.APIClients
             }
             else
             {
-                client.Authenticator = new JwtAuthenticator(jwt);
+                client.Authenticator = new JwtAuthenticator(jwt);  // This line ensures that any request to this client includes this jwt
             }
             
         }
-        /*
-        public AccountBalance DisplayBalance(string username)
+        
+        public AccountBalance DisplayBalance()
         {
-            RestRequest request = new RestRequest("balance/" + )
+            RestRequest request = new RestRequest("transfer");
+            //request.AddHeader("Authorization", "Bearer " + token); - we don't need this line because line 29 already do this
+            IRestResponse<AccountBalance> response = client.Get<AccountBalance>(request);
+
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                Console.WriteLine("Could not connect to the database");
+
+                return null;
+            }
+
+            if (!response.IsSuccessful)
+            {
+                Console.WriteLine("Problem getting balance: " + response.StatusDescription);
+                Console.WriteLine(response.Content);
+
+                return null;
+            }
+
+            return response.Data;
+
         } 
-        */
+        
     }
 }

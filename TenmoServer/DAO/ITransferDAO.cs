@@ -10,6 +10,5 @@ namespace TenmoServer.DAO
     {
         AccountBalance DisplayBalance(string username);
 
-        
     }
 }

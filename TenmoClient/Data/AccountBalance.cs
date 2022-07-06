@@ -6,6 +6,6 @@ namespace TenmoClient.Data
 {
     public class AccountBalance
     {
-        public decimal Balance { get; private set; }
+        public decimal Balance { get; set; }
     }
 }

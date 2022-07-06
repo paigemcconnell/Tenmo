@@ -16,17 +16,25 @@ namespace TenmoServer.Controllers
     public class TransferController : ControllerBase
     {
         private readonly ITransferDAO transferDAO;
-        public TransferController()
-        {
 
+        public TransferController(ITransferDAO transferDAO)
+        {
+            this.transferDAO = transferDAO;
         }
 
        
         [HttpGet]
         [Authorize]
-        public ActionResult DisplayBalance(string username)
+        public ActionResult DisplayBalance()
         {
-            AccountBalance balance = transferDAO.DisplayBalance(username);
+            string username = User.Identity.Name; // username of the currently logged in user
+
+            AccountBalance balance = transferDAO.DisplayBalance(username);  // balance for ONLY the currently logged in user
+
+            if (balance == null)
+            {
+                return NotFound("Could not find balance");
+            }
 
             return Ok(balance);
         }

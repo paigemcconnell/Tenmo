@@ -76,7 +76,7 @@ namespace TenmoClient
                     switch (menuSelection)
                     {
                         case 1: // View Balance
-                            Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
+                            DisplayBalance();
                             break;
 
                         case 2: // View Past Transfers
@@ -147,12 +147,18 @@ namespace TenmoClient
                 else // log in successfull and jwt is stored
                 {
                     string jwt = authenticatedUser.Token;
-                    transferClient.UpdateToken(jwt);
+                    transferClient.UpdateToken(jwt);   // token is updated to the current user's jwt
 
-                    
                     Console.WriteLine("Successfully logged in");
                 }
             }
         }
+
+        private void DisplayBalance()
+        {
+            AccountBalance account = transferClient.DisplayBalance();   // this calls the RestClient method to display balance
+            Console.WriteLine("Your current account balance is: " + account.Balance.ToString("C"));
+        }
+
     }
 }
