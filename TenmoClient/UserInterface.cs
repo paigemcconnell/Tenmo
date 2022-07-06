@@ -1,5 +1,6 @@
 ﻿using System;
 using TenmoClient.Data;
+using TenmoClient.APIClients;
 
 namespace TenmoClient
 {
@@ -7,7 +8,7 @@ namespace TenmoClient
     {
         private readonly ConsoleService consoleService = new ConsoleService();
         private readonly AuthService authService = new AuthService();
-
+        private TransferRestClient transferClient = new TransferRestClient();
         private bool quitRequested = false;
 
         public void Start()
@@ -139,12 +140,17 @@ namespace TenmoClient
                 // Log the user in
                 API_User authenticatedUser = authService.Login(loginUser);
 
-                if (authenticatedUser != null)
+                if (authenticatedUser == null) // if log in failed 
+                {
+                    Console.WriteLine("Could not log in");
+                }
+                else // log in successfull and jwt is stored
                 {
                     string jwt = authenticatedUser.Token;
+                    transferClient.UpdateToken(jwt);
 
-                    // TODO: Do something with this JWT.
-                    Console.WriteLine("DOING NOTHING WITH JWT");
+                    
+                    Console.WriteLine("Successfully logged in");
                 }
             }
         }

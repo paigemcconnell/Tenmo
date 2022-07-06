@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TenmoServer.Security;
+using TenmoServer.DAO;
+using TenmoServer.Models;
 
 namespace TenmoServer.Controllers
 {
@@ -13,19 +15,22 @@ namespace TenmoServer.Controllers
     [ApiController]
     public class TransferController : ControllerBase
     {
+        private readonly ITransferDAO transferDAO;
         public TransferController()
         {
 
         }
 
-        /*
+       
         [HttpGet]
         [Authorize]
-        public ActionResult DisplayBalance()
+        public ActionResult DisplayBalance(string username)
         {
+            AccountBalance balance = transferDAO.DisplayBalance(username);
 
+            return Ok(balance);
         }
-        */
+        
 
 
 
