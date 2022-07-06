@@ -9,6 +9,7 @@ namespace TenmoServer.DAO
    public interface ITransferDAO
     {
         AccountBalance DisplayBalance(string username);
-
+        List<ReturnUser> DisplayUsers(string username);
     }
+    
 }

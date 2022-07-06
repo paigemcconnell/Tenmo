@@ -11,7 +11,7 @@ using TenmoServer.Models;
 
 namespace TenmoServer.Controllers
 {
-    [Route("[controller]")]
+    [Route("/")]
     [ApiController]
     public class TransferController : ControllerBase
     {
@@ -23,7 +23,7 @@ namespace TenmoServer.Controllers
         }
 
        
-        [HttpGet]
+        [HttpGet("transfer/balance")]
         [Authorize]
         public ActionResult DisplayBalance()
         {
@@ -37,6 +37,21 @@ namespace TenmoServer.Controllers
             }
 
             return Ok(balance);
+        }
+        [HttpGet("transfer/users")]
+        [Authorize]
+        public ActionResult DisplayAllUsers()
+        {
+            string username = User.Identity.Name;
+
+            List<ReturnUser> users = transferDAO.DisplayUsers(username);
+
+            if (users == null)
+            {
+                return NotFound("Could not find users");
+            }
+
+            return Ok(users);
         }
         
 
