@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TenmoServer.Security;
 using TenmoServer.DAO;
 using TenmoServer.Models;
+using System.Security.Claims;
 
 namespace TenmoServer.Controllers
 {
@@ -58,7 +59,7 @@ namespace TenmoServer.Controllers
         [Authorize]
         public ActionResult SendFunds(Transfer transfer) //int accountFrom, int accountTo, decimal transferAmount
         {
-            //transfer.AccountFromId = ;
+            transfer.UsersFromId = LoggedInUserId;
             transferDAO.SendFunds(transfer);
 
           
@@ -66,6 +67,23 @@ namespace TenmoServer.Controllers
             return Ok();
         }
 
+        private int LoggedInUserId
+        {
+            get
+            {
+                Claim idClaim = User.FindFirst("sub");
+                if (idClaim == null)
+                {
+                    // User is not logged in
+                    return -1;
+                }
+                else
+                {
+                    // User is logged in. Their subject (sub) claim is their ID
+                    return int.Parse(idClaim.Value);
+                }
+            }
+        }
 
     }
 }
