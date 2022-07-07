@@ -90,6 +90,7 @@ namespace TenmoClient
 
                         case 4: // Send TE Bucks
                             DisplayUsers();
+                            Transfer transfer = new Transfer();
                             SendFunds();
                             break;
 
@@ -178,7 +179,7 @@ namespace TenmoClient
             return users;
         }
 
-        private Transfer SendFunds()
+        private void SendFunds()
         {
             Console.WriteLine("Enter ID of user you are sending to:");
             string userIdInput = Console.ReadLine();
@@ -189,12 +190,12 @@ namespace TenmoClient
             int amount = Int32.Parse(amountInput);
 
             Transfer newTransfer = transferClient.SendFunds();
-            newTransfer.AccountToId = userId;
+            newTransfer.UsersFromId = 
+            newTransfer.UsersToId = userId;
             newTransfer.TransferAmount = amount;
           
             Console.WriteLine("Transfer successful!");
 
-            return newTransfer;
 
 
         }

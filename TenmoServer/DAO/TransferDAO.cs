@@ -82,10 +82,10 @@ namespace TenmoServer.DAO
             }
         }
 
-        public Transfer SendFunds(int fromUserId, int toUserId, decimal transferAmount)
+        public void SendFunds(Transfer transfer)
         {
-            int fromAccountId = GetAccountId(fromUserId);
-            int toAccountId = GetAccountId(toUserId);
+            int fromAccountId = GetAccountId(transfer.UsersFromId);
+            int toAccountId = GetAccountId(transfer.UsersToId);
 
             const string sql = "INSERT INTO transfers (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
             "VALUES(1001, 2001, @accountFrom, @accountTo, @amount)";             // 1001 = send, 2001 = approved (these will always be the ids when sending money)
@@ -96,16 +96,10 @@ namespace TenmoServer.DAO
 
                 SqlCommand command = new SqlCommand(sql, conn);
 
-                command.Parameters.AddWithValue("@accountFrom", fromAccountId);
-                command.Parameters.AddWithValue("@accountTo", toAccountId);
-                command.Parameters.AddWithValue("@amount", transferAmount);
+                command.Parameters.AddWithValue("@accountFrom", transfer.UsersFromId);
+                command.Parameters.AddWithValue("@accountTo", transfer.UsersToId);
+                command.Parameters.AddWithValue("@amount", transfer.TransferAmount);
 
-                Transfer newTransfer = new Transfer();
-                newTransfer.AccountFromId = fromAccountId;
-                newTransfer.AccountToId = toAccountId;
-                newTransfer.TransferAmount = transferAmount;
-
-                return newTransfer;
             }
 
 

@@ -4,11 +4,11 @@ using System.Text;
 
 namespace TenmoClient.Data
 {
-    public class Transfer
+    public class Transfer //Data
     {
-        public int AccountFromId { get; set; }
+        public int UserFromId { get; set; }
 
-        public int AccountToId { get; set; }
+        public int UsersToId { get; set; }
 
         public decimal TransferAmount { get; set; }
 

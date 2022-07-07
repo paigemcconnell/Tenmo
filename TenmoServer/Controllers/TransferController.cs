@@ -56,16 +56,14 @@ namespace TenmoServer.Controllers
 
         [HttpPost("transfer/sendfunds")]
         [Authorize]
-        public ActionResult SendFunds(int accountFrom, int accountTo, decimal transferAmount)
+        public ActionResult SendFunds(Transfer transfer) //int accountFrom, int accountTo, decimal transferAmount
         {
-            Transfer transfer = transferDAO.SendFunds(accountFrom, accountTo, transferAmount);
+            //transfer.AccountFromId = ;
+            transferDAO.SendFunds(transfer);
 
-            if (transfer == null)
-            {
-                return NotFound("Could not find transfer");
-            }
+          
 
-            return Ok(transfer);
+            return Ok();
         }
 
 

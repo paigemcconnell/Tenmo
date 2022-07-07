@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace TenmoServer.Models
 {
-    public class Transfer
+    public class Transfer //Models
     {
-        public int AccountFromId { get; set; }
+        public int UsersFromId { get; set; } 
 
-        public int AccountToId { get; set; }
+        public int UsersToId { get; set; }
 
         public decimal TransferAmount { get; set; }
 
