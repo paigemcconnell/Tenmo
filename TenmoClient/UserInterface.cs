@@ -90,7 +90,7 @@ namespace TenmoClient
 
                         case 4: // Send TE Bucks
                             DisplayUsers();
-                            Console.WriteLine("Enter ID of user you are sending to:"); 
+                            SendFunds();
                             break;
 
                         case 5: // Request TE Bucks
@@ -166,11 +166,37 @@ namespace TenmoClient
         {
             List<API_User> users = transferClient.DisplayUsers();
 
+            Console.WriteLine("-------------------------------------------");
+            Console.WriteLine("Users");
+            Console.WriteLine("ID" + ("Name".PadLeft(12)));
+            Console.WriteLine("--------------------------------------------");
+
             foreach(API_User user in users)
             {
-            Console.WriteLine($"{user.UserId}  {user.Username}");
+            Console.WriteLine($"{user.UserId} {user.Username.PadLeft(10)}");
             }
             return users;
+        }
+
+        private Transfer SendFunds()
+        {
+            Console.WriteLine("Enter ID of user you are sending to:");
+            string userIdInput = Console.ReadLine();
+            int userId = Int32.Parse(userIdInput);
+
+            Console.WriteLine("Enter the amount to transfer:");
+            string amountInput = Console.ReadLine();
+            int amount = Int32.Parse(amountInput);
+
+            Transfer newTransfer = transferClient.SendFunds();
+            newTransfer.AccountToId = userId;
+            newTransfer.TransferAmount = amount;
+          
+            Console.WriteLine("Transfer successful!");
+
+            return newTransfer;
+
+
         }
     }
 }

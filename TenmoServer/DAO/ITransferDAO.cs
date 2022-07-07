@@ -9,7 +9,12 @@ namespace TenmoServer.DAO
    public interface ITransferDAO
     {
         AccountBalance DisplayBalance(string username);
+
         List<ReturnUser> DisplayUsers(string username);
+
+        int GetAccountId(int userId);
+
+        Transfer SendFunds(int fromUserId, int toUserId, decimal transferAmount);
     }
     
 }

@@ -62,9 +62,56 @@ namespace TenmoServer.DAO
                     }
                 }
                     return userList;
-
             }
         }
+
+        public int GetAccountId(int userId)
+        {
+            const string sql = "SELECT a.account_id FROM accounts a INNER JOIN users u ON u.user_id = a.user_id WHERE u.user_id = @userId";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlCommand command = new SqlCommand(sql, conn);
+
+                command.Parameters.AddWithValue("@userId", userId);
+                int accountId = Convert.ToInt32(command.ExecuteScalar());  // pulling account # from sql
+
+                return accountId;
+            }
+        }
+
+        public Transfer SendFunds(int fromUserId, int toUserId, decimal transferAmount)
+        {
+            int fromAccountId = GetAccountId(fromUserId);
+            int toAccountId = GetAccountId(toUserId);
+
+            const string sql = "INSERT INTO transfers (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
+            "VALUES(1001, 2001, @accountFrom, @accountTo, @amount)";             // 1001 = send, 2001 = approved (these will always be the ids when sending money)
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlCommand command = new SqlCommand(sql, conn);
+
+                command.Parameters.AddWithValue("@accountFrom", fromAccountId);
+                command.Parameters.AddWithValue("@accountTo", toAccountId);
+                command.Parameters.AddWithValue("@amount", transferAmount);
+
+                Transfer newTransfer = new Transfer();
+                newTransfer.AccountFromId = fromAccountId;
+                newTransfer.AccountToId = toAccountId;
+                newTransfer.TransferAmount = transferAmount;
+
+                return newTransfer;
+            }
+
+
+        }
+
+
 
     }
 }

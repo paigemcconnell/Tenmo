@@ -22,7 +22,7 @@ namespace TenmoServer.Controllers
             this.transferDAO = transferDAO;
         }
 
-       
+
         [HttpGet("transfer/balance")]
         [Authorize]
         public ActionResult DisplayBalance()
@@ -53,8 +53,20 @@ namespace TenmoServer.Controllers
 
             return Ok(users);
         }
-        
 
+        [HttpPost("transfer/sendfunds")]
+        [Authorize]
+        public ActionResult SendFunds(int accountFrom, int accountTo, decimal transferAmount)
+        {
+            Transfer transfer = transferDAO.SendFunds(accountFrom, accountTo, transferAmount);
+
+            if (transfer == null)
+            {
+                return NotFound("Could not find transfer");
+            }
+
+            return Ok(transfer);
+        }
 
 
     }
