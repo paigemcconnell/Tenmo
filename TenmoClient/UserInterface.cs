@@ -188,11 +188,11 @@ namespace TenmoClient
             Console.WriteLine("Enter the amount to transfer:");
             string amountInput = Console.ReadLine();
             int amount = Int32.Parse(amountInput);
-
-            Transfer newTransfer = transferClient.SendFunds();
-            newTransfer.UsersFromId = 
-            newTransfer.UsersToId = userId;
-            newTransfer.TransferAmount = amount;
+            Transfer transfer = new Transfer(); //instantiatE??
+           //transfer.UsersFromId = 0;
+            transfer.UsersToId = userId;
+            transfer.TransferAmount = amount;
+            Transfer newTransfer = transferClient.SendFunds(transfer); 
           
             Console.WriteLine("Transfer successful!");
 

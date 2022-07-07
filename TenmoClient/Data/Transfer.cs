@@ -6,7 +6,7 @@ namespace TenmoClient.Data
 {
     public class Transfer //Data
     {
-        public int UserFromId { get; set; }
+        public int UsersFromId { get; set; }
 
         public int UsersToId { get; set; }
 

@@ -80,9 +80,11 @@ namespace TenmoClient.APIClients
 
         }
         
-        public Transfer SendFunds()
+        public Transfer SendFunds(Transfer transfer)
         {
             RestRequest request = new RestRequest("transfer/sendfunds");
+
+            request.AddJsonBody(transfer);
 
             IRestResponse<Transfer> response = client.Post<Transfer>(request);
 

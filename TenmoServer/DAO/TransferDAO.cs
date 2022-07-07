@@ -96,9 +96,11 @@ namespace TenmoServer.DAO
 
                 SqlCommand command = new SqlCommand(sql, conn);
 
-                command.Parameters.AddWithValue("@accountFrom", transfer.UsersFromId);
-                command.Parameters.AddWithValue("@accountTo", transfer.UsersToId);
+                command.Parameters.AddWithValue("@accountFrom", fromAccountId);
+                command.Parameters.AddWithValue("@accountTo", toAccountId);
                 command.Parameters.AddWithValue("@amount", transfer.TransferAmount);
+
+                command.ExecuteNonQuery();
 
             }
 
