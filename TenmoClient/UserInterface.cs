@@ -90,7 +90,7 @@ namespace TenmoClient
 
                         case 4: // Send TE Bucks
                             DisplayUsers();
-                            Transfer transfer = new Transfer();
+                            //Transfer transfer = new Transfer();
                             SendFunds();
                             break;
 
@@ -169,12 +169,12 @@ namespace TenmoClient
 
             Console.WriteLine("-------------------------------------------");
             Console.WriteLine("Users");
-            Console.WriteLine("ID" + ("Name".PadLeft(12)));
+            Console.WriteLine("ID" + ("Name".PadLeft(5)));
             Console.WriteLine("--------------------------------------------");
 
             foreach(API_User user in users)
             {
-            Console.WriteLine($"{user.UserId} {user.Username.PadLeft(10)}");
+            Console.WriteLine($"{user.UserId} {user.Username.PadRight(20)}");
             }
             return users;
         }
@@ -183,20 +183,28 @@ namespace TenmoClient
         {
             Console.WriteLine("Enter ID of user you are sending to:");
             string userIdInput = Console.ReadLine();
-            int userId = Int32.Parse(userIdInput);
+            int userId = Int32.Parse(userIdInput);                       
 
             Console.WriteLine("Enter the amount to transfer:");
-            string amountInput = Console.ReadLine();
-            int amount = Int32.Parse(amountInput);
-            Transfer transfer = new Transfer(); //instantiatE??
-           //transfer.UsersFromId = 0;
-            transfer.UsersToId = userId;
-            transfer.TransferAmount = amount;
-            Transfer newTransfer = transferClient.SendFunds(transfer); 
-          
-            Console.WriteLine("Transfer successful!");
+            string amountInput = Console.ReadLine();                       
+            int amount = Int32.Parse(amountInput);                         
+            API_User user = new API_User();                                // new instance of API_User (the user who is logged in)
+            Transfer transfer = new Transfer();                            // instantiate a new transfer
+            transfer.UsersFromId = user.UserId;                            // set the User From ID to the logged in user's ID (API_User)
+            transfer.UsersToId = userId;                                   // set the User To ID to the input user ID
+            transfer.TransferAmount = amount;                              // set the Amount to the input amount
+            Transfer newTransfer = transferClient.SendFunds(transfer);     // new instance of Transfer that calls the API Client method SendFunds
+            
+            if (newTransfer != null)
+            {
+                Console.WriteLine("Transfer successful!");
+            }
+            else
+            {
+                Console.WriteLine("Could not complete transfer. Please try again.");
+            }
 
-
+            
 
         }
     }

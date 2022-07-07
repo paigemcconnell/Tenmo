@@ -98,7 +98,7 @@ namespace TenmoClient.APIClients
             if (!response.IsSuccessful)
             {
                 Console.WriteLine("Problem getting transfer: " + response.StatusDescription);
-                Console.WriteLine(response.Content);
+                //Console.WriteLine(response.Content);
 
                 return null;
             }

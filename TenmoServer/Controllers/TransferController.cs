@@ -39,6 +39,7 @@ namespace TenmoServer.Controllers
 
             return Ok(balance);
         }
+
         [HttpGet("transfer/users")]
         [Authorize]
         public ActionResult DisplayAllUsers()
@@ -60,11 +61,19 @@ namespace TenmoServer.Controllers
         public ActionResult SendFunds(Transfer transfer) //int accountFrom, int accountTo, decimal transferAmount
         {
             transfer.UsersFromId = LoggedInUserId;
-            transferDAO.SendFunds(transfer);
+            AccountBalance balance = transferDAO.DisplayBalance(User.Identity.Name);
+           
+            if (balance.Balance - transfer.TransferAmount >= 0)
+            {
+                transferDAO.SendFunds(transfer);
+                return Ok(transfer);
+            }
 
-          
-
-            return Ok();
+            else
+            {
+                return BadRequest();
+            }
+            
         }
 
         private int LoggedInUserId

@@ -61,7 +61,7 @@ namespace TenmoServer.DAO
                         userList.Add(user);
                     }
                 }
-                    return userList;
+                return userList;
             }
         }
 
@@ -82,7 +82,7 @@ namespace TenmoServer.DAO
             }
         }
 
-        public void SendFunds(Transfer transfer)
+        public bool SendFunds(Transfer transfer)
         {
             int fromAccountId = GetAccountId(transfer.UsersFromId);
             int toAccountId = GetAccountId(transfer.UsersToId);
@@ -100,12 +100,24 @@ namespace TenmoServer.DAO
                 command.Parameters.AddWithValue("@accountTo", toAccountId);
                 command.Parameters.AddWithValue("@amount", transfer.TransferAmount);
 
-                command.ExecuteNonQuery();
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    return true;
+                }
+
+                return false;
 
             }
 
 
+
+            // call Credit method
+            // call Debit method
+
         }
+
 
 
 
