@@ -110,8 +110,6 @@ namespace TenmoServer.DAO
 
         public decimal CreditAccount(int transferId, int userToId)
         {
-            //int newBalance = 0;
-            Transfer transfer = new Transfer();
             int toAccountId = GetAccountId(userToId);
 
             const string sql = "UPDATE accounts SET balance = (select accounts.balance + transfers.amount as [CurrentBalance] " +
@@ -127,13 +125,63 @@ namespace TenmoServer.DAO
                 command.Parameters.AddWithValue("@transferId", transferId);
                 command.Parameters.AddWithValue("@accountTo", toAccountId);
 
+                decimal newBalance = Convert.ToDecimal(command.ExecuteScalar());
+
+                return newBalance;
+            }
+        }
+
+        public decimal DebitAccount(int transferId, int userFromId)
+        {
+            int fromAccountId = GetAccountId(userFromId);
+
+            const string sql = "UPDATE accounts SET balance = (select accounts.balance - transfers.amount as [CurrentBalance] " +
+                "from accounts join transfers on accounts.account_id = transfers.account_from where transfer_id = @transferId) " +
+                "WHERE account_id = @accountFrom";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlCommand command = new SqlCommand(sql, conn);
+
+                command.Parameters.AddWithValue("@transferId", transferId);
+                command.Parameters.AddWithValue("@accountFrom", fromAccountId);
 
                 decimal newBalance = Convert.ToDecimal(command.ExecuteScalar());
 
                 return newBalance;
             }
-            
+        }
 
+        public List<Transfer> DisplayTransfers(int userId)
+        {
+            const string sql = "SELECT username, user_id FROM users ";
+
+            List<Transfer> transferList = new List<Transfer>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlCommand command = new SqlCommand(sql, conn);
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        string returnUsername = Convert.ToString(reader["username"]);
+                        int returnUserId = Convert.ToInt32(reader["user_id"]);
+                        ReturnUser user = new ReturnUser();
+                        user.Username = returnUsername;
+                        user.UserId = returnUserId;
+                        userList.Add(user);
+                    }
+                }
+                return userList;
+            }
         }
 
 

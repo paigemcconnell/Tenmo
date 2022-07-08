@@ -99,7 +99,6 @@ namespace TenmoClient.APIClients
             {
                 Console.WriteLine("Problem getting transfer: " + response.StatusDescription);
                
-
                 return false;
             }
 

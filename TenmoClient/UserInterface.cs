@@ -187,7 +187,7 @@ namespace TenmoClient
 
             Console.WriteLine("Enter the amount to transfer:");
             string amountInput = Console.ReadLine();                       
-            int amount = Int32.Parse(amountInput);                         
+            decimal amount = Decimal.Parse(amountInput);                         
             API_User user = new API_User();                                // new instance of API_User (the user who is logged in)
             Transfer transfer = new Transfer();                            // instantiate a new transfer
             transfer.UsersFromId = user.UserId;                            // set the User From ID to the logged in user's ID (API_User)

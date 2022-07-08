@@ -17,6 +17,8 @@ namespace TenmoServer.DAO
         int SendFunds(Transfer transfer);
 
         decimal CreditAccount(int transferId, int userToId);
+
+        decimal DebitAccount(int transferId, int userFromId);
     }
     
 }

@@ -66,9 +66,9 @@ namespace TenmoServer.Controllers
             if (balance.Balance - transfer.TransferAmount >= 0)
             {
                 int transferId = transferDAO.SendFunds(transfer);
-                //return Ok(transferId);
                 decimal currentToBalance = transferDAO.CreditAccount(transferId, transfer.UsersToId);
-                return Ok(currentToBalance);
+                decimal currentFromBalance = transferDAO.DebitAccount(transferId, transfer.UsersFromId);
+                return Ok();
             }
 
             else
