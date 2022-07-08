@@ -193,9 +193,9 @@ namespace TenmoClient
             transfer.UsersFromId = user.UserId;                            // set the User From ID to the logged in user's ID (API_User)
             transfer.UsersToId = userId;                                   // set the User To ID to the input user ID
             transfer.TransferAmount = amount;                              // set the Amount to the input amount
-            Transfer newTransfer = transferClient.SendFunds(transfer);     // new instance of Transfer that calls the API Client method SendFunds
+            bool completed = transferClient.SendFunds(transfer);           //calls the API Client method SendFunds return a bool
             
-            if (newTransfer != null)
+            if (completed)
             {
                 Console.WriteLine("Transfer successful!");
             }

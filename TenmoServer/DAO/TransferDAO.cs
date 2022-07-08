@@ -82,13 +82,13 @@ namespace TenmoServer.DAO
             }
         }
 
-        public bool SendFunds(Transfer transfer)
+        public int SendFunds(Transfer transfer)
         {
             int fromAccountId = GetAccountId(transfer.UsersFromId);
             int toAccountId = GetAccountId(transfer.UsersToId);
 
             const string sql = "INSERT INTO transfers (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
-            "VALUES(1001, 2001, @accountFrom, @accountTo, @amount)";             // 1001 = send, 2001 = approved (these will always be the ids when sending money)
+            "VALUES(1001, 2001, @accountFrom, @accountTo, @amount); SELECT @@IDENTITY";             // 1001 = send, 2001 = approved (these will always be the ids when sending money)
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -100,24 +100,41 @@ namespace TenmoServer.DAO
                 command.Parameters.AddWithValue("@accountTo", toAccountId);
                 command.Parameters.AddWithValue("@amount", transfer.TransferAmount);
 
-                int rowsAffected = command.ExecuteNonQuery();
+                int transferId = Convert.ToInt32(command.ExecuteScalar());
 
-                if (rowsAffected > 0)
-                {
-                    return true;
-                }
-
-                return false;
+                return transferId;
 
             }
 
-
-
-            // call Credit method
-            // call Debit method
-
         }
 
+        public decimal CreditAccount(int transferId, int userToId)
+        {
+            //int newBalance = 0;
+            Transfer transfer = new Transfer();
+            int toAccountId = GetAccountId(userToId);
+
+            const string sql = "UPDATE accounts SET balance = (select accounts.balance + transfers.amount as [CurrentBalance] " +
+                "from accounts join transfers on accounts.account_id = transfers.account_from where transfer_id = @transferId) " +
+                "WHERE account_id = @accountTo";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlCommand command = new SqlCommand(sql, conn);
+
+                command.Parameters.AddWithValue("@transferId", transferId);
+                command.Parameters.AddWithValue("@accountTo", toAccountId);
+
+
+                decimal newBalance = Convert.ToDecimal(command.ExecuteScalar());
+
+                return newBalance;
+            }
+            
+
+        }
 
 
 

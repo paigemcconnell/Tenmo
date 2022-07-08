@@ -58,22 +58,24 @@ namespace TenmoServer.Controllers
 
         [HttpPost("transfer/sendfunds")]
         [Authorize]
-        public ActionResult SendFunds(Transfer transfer) //int accountFrom, int accountTo, decimal transferAmount
+        public ActionResult SendFunds(Transfer transfer) 
         {
             transfer.UsersFromId = LoggedInUserId;
             AccountBalance balance = transferDAO.DisplayBalance(User.Identity.Name);
-           
+
             if (balance.Balance - transfer.TransferAmount >= 0)
             {
-                transferDAO.SendFunds(transfer);
-                return Ok(transfer);
+                int transferId = transferDAO.SendFunds(transfer);
+                //return Ok(transferId);
+                decimal currentToBalance = transferDAO.CreditAccount(transferId, transfer.UsersToId);
+                return Ok(currentToBalance);
             }
 
             else
             {
                 return BadRequest();
             }
-            
+
         }
 
         private int LoggedInUserId
@@ -94,5 +96,6 @@ namespace TenmoServer.Controllers
             }
         }
 
+       
     }
 }

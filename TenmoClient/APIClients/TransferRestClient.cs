@@ -80,30 +80,30 @@ namespace TenmoClient.APIClients
 
         }
         
-        public Transfer SendFunds(Transfer transfer)
+        public bool SendFunds(Transfer transfer)
         {
             RestRequest request = new RestRequest("transfer/sendfunds");
 
             request.AddJsonBody(transfer);
 
-            IRestResponse<Transfer> response = client.Post<Transfer>(request);
+            IRestResponse response = client.Post(request);
 
             if (response.ResponseStatus != ResponseStatus.Completed)
             {
                 Console.WriteLine("Could not connect to the database");
 
-                return null;
+                return false;
             }
 
             if (!response.IsSuccessful)
             {
                 Console.WriteLine("Problem getting transfer: " + response.StatusDescription);
-                //Console.WriteLine(response.Content);
+               
 
-                return null;
+                return false;
             }
 
-            return response.Data;
+            return true;
 
         }
 

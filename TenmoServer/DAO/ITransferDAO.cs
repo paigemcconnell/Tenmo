@@ -14,7 +14,9 @@ namespace TenmoServer.DAO
 
         int GetAccountId(int userId);
 
-        bool SendFunds(Transfer transfer);
+        int SendFunds(Transfer transfer);
+
+        decimal CreditAccount(int transferId, int userToId);
     }
     
 }
