@@ -154,17 +154,24 @@ namespace TenmoServer.DAO
             }
         }
 
-        public List<Transfer> DisplayTransfers(int userId)
+        
+        public List<Transfer> DisplayTransfers(string username)
         {
-            const string sql = "SELECT username, user_id FROM users ";
+            const string sql = "SELECT t.transfer_id, t.account_from, uFrom.username AS 'From', t.account_to, uTo.username AS 'To', t.amount " +
+                "FROM transfers t INNER JOIN accounts aTo ON aTo.account_id = t.account_to INNER JOIN users uTo ON uTo.user_id = aTo.user_id " +
+                "INNER JOIN accounts aFrom ON aFrom.account_id = t.account_from INNER JOIN users uFrom ON uFrom.user_id = aFrom.user_id " +
+                "WHERE uFrom.username = @username OR uTo.username = @username";
 
             List<Transfer> transferList = new List<Transfer>();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
+
             {
                 conn.Open();
 
                 SqlCommand command = new SqlCommand(sql, conn);
+
+                command.Parameters.AddWithValue("@username", username);
 
                 SqlDataReader reader = command.ExecuteReader();
 
@@ -172,17 +179,63 @@ namespace TenmoServer.DAO
                 {
                     while (reader.Read())
                     {
-                        string returnUsername = Convert.ToString(reader["username"]);
-                        int returnUserId = Convert.ToInt32(reader["user_id"]);
-                        ReturnUser user = new ReturnUser();
-                        user.Username = returnUsername;
-                        user.UserId = returnUserId;
-                        userList.Add(user);
+                        int transferId = Convert.ToInt32(reader["transfer_id"]);
+                        string userFrom = Convert.ToString(reader["From"]);
+                        string userTo = Convert.ToString(reader["To"]);
+                        int amount = Convert.ToInt32(reader["amount"]);
+                        Transfer transfer = new Transfer();
+                        transfer.TransferId = transferId;
+                        transfer.UserFrom = userFrom;
+                        transfer.UserTo = userTo;
+                        transfer.Amount = amount;
+                        transferList.Add(transfer);
+                        
                     }
                 }
-                return userList;
+
+                return transferList;
             }
         }
+
+        public Transfer GetTransferDetails (int transferId)
+        {
+            const string sql = "******";
+
+            Transfer transfer = new Transfer();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlCommand command = new SqlCommand(sql, conn);
+
+                //Need to add parameters
+                //command.Parameters.AddWithValue("@transferId", transferId);
+                //command.Parameters.AddWithValue("@accountTo", toAccountId);
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        transferId = Convert.ToInt32(reader["transfer_id"]);
+                        string userFrom = Convert.ToString(reader["from"]);
+                        string userTo = Convert.ToString(reader["to"]);
+                        int amount = Convert.ToInt32(reader["amount"]);
+                        transfer.TransferId = transferId;
+                        transfer.UserFrom = userFrom;
+                        transfer.UserTo = userTo;
+                        transfer.Amount = amount;
+                    }
+                }
+                
+            return transfer;
+               
+            }
+        }
+
+
 
 
 

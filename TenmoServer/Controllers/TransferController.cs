@@ -78,6 +78,27 @@ namespace TenmoServer.Controllers
 
         }
 
+        [HttpGet("transfer/displaytransfers")]
+        [Authorize]
+        public ActionResult DisplayTransfers()
+        {
+            string username = User.Identity.Name;
+
+            List<Transfer> transfers = transferDAO.DisplayTransfers(username);
+
+            return Ok(transfers);
+        }
+
+        [HttpGet("transfer/transferdetails")]
+        [Authorize]
+        public ActionResult GetTransferDetails(int transferId)
+        {
+            Transfer transfer = transferDAO.GetTransferDetails(transferId);
+
+            return Ok();
+        }
+
+
         private int LoggedInUserId
         {
             get

@@ -81,30 +81,30 @@ namespace TenmoClient
                             break;
 
                         case 2: // View Past Transfers
-                            Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
+                            DisplayTransfers();
+                            Console.WriteLine("Enter transfer ID to view details: ");
+                            string transferIdInput = Console.ReadLine();
+                            int transferId = Int32.Parse(transferIdInput);
+                            GetTransferDetails(transferId);
                             break;
 
                         case 3: // View Pending Requests
-                            Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
+                            Console.WriteLine("This feature is coming soon!"); // TODO: Implement me
                             break;
 
                         case 4: // Send TE Bucks
                             DisplayUsers();
-                            //Transfer transfer = new Transfer();
                             SendFunds();
                             break;
 
                         case 5: // Request TE Bucks
-                            Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
+                            Console.WriteLine("This feature is coming soon!"); // TODO: Implement me
                             break;
 
                         case 6: // Log in as someone else
-
                             authService.ClearAuthenticator();
-
                             // NOTE: You will need to clear any stored JWTs in other API Clients
-                            Console.WriteLine("NOT IMPLEMENTED!");
-
+                            transferClient.UpdateToken(null);
                             return; // Leaves the menu and should return as someone else
 
                         case 0: // Quit
@@ -183,7 +183,7 @@ namespace TenmoClient
         {
             Console.WriteLine("Enter ID of user you are sending to:");
             string userIdInput = Console.ReadLine();
-            int userId = Int32.Parse(userIdInput);                       
+            int userId = Int32.Parse(userIdInput);
 
             Console.WriteLine("Enter the amount to transfer:");
             string amountInput = Console.ReadLine();                       
@@ -201,11 +201,49 @@ namespace TenmoClient
             }
             else
             {
-                Console.WriteLine("Could not complete transfer. Please try again.");
+                Console.WriteLine();
             }
 
-            
+        }
+
+        private List<Transfer> DisplayTransfers()
+        {
+            List<Transfer> transfers = transferClient.DisplayTransfers();
+
+            Console.WriteLine("-------------------------------------------");
+            Console.WriteLine("Transfers");
+            Console.WriteLine("ID     " + ("From:     ") + ("To:     ") + ("Amount:     "));
+            Console.WriteLine("--------------------------------------------");
+
+            foreach (Transfer transfer in transfers)
+            {
+                Console.WriteLine($"{transfer.TransferId}     {transfer.UserFrom}     {transfer.UserTo}     {transfer.Amount.ToString("C")}");
+               
+            }
+            Console.WriteLine();
+            return transfers;
 
         }
+
+        private Transfer GetTransferDetails(int transferId)
+        {
+            GetTransferDetails(transferId);
+
+            Transfer transfer = transferClient.GetTransferDetails();
+
+            Console.WriteLine("-------------------------------------------");
+            Console.WriteLine("Transfer Details");
+            Console.WriteLine("--------------------------------------------");
+
+            Console.WriteLine("Id: " + transfer.TransferId);
+            Console.WriteLine("From: " + transfer.UserFrom);
+            Console.WriteLine("To: " + transfer.UserTo);
+            Console.WriteLine("Type: Send");
+            Console.WriteLine("Status: Approved");
+            Console.WriteLine("Amount: " + transfer.Amount);
+            Console.WriteLine();
+            return transfer;
+        }
+
     }
 }

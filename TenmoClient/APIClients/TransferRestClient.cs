@@ -97,13 +97,61 @@ namespace TenmoClient.APIClients
 
             if (!response.IsSuccessful)
             {
-                Console.WriteLine("Problem getting transfer: " + response.StatusDescription);
+                Console.WriteLine("Transfer not completed due to insufficient funds.");
                
                 return false;
             }
 
             return true;
 
+        }
+
+        public List<Transfer> DisplayTransfers()
+        {
+            RestRequest request = new RestRequest("transfer/displaytransfers");
+
+            IRestResponse<List<Transfer>> response = client.Get<List<Transfer>>(request);
+
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                Console.WriteLine("Could not connect to the database");
+
+                return null;
+            }
+
+            if (!response.IsSuccessful)
+            {
+                Console.WriteLine("Problem getting transfers: " + response.StatusDescription);
+                Console.WriteLine(response.Content);
+
+                return null;
+            }
+
+            return response.Data;
+        }
+
+        public Transfer GetTransferDetails()
+        {
+            RestRequest request = new RestRequest("transfer/transferdetails");
+
+            IRestResponse<Transfer> response = client.Get<Transfer>(request);
+
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                Console.WriteLine("Could not connect to the database");
+
+                return null;
+            }
+
+            if (!response.IsSuccessful)
+            {
+                Console.WriteLine("Problem getting transfer details: " + response.StatusDescription);
+                Console.WriteLine(response.Content);
+
+                return null;
+            }
+
+            return response.Data;
         }
 
     }

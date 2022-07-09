@@ -19,6 +19,10 @@ namespace TenmoServer.DAO
         decimal CreditAccount(int transferId, int userToId);
 
         decimal DebitAccount(int transferId, int userFromId);
+
+        List<Transfer> DisplayTransfers(string username);
+
+        public Transfer GetTransferDetails(int transferId);
     }
     
 }
