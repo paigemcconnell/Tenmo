@@ -113,7 +113,7 @@ namespace TenmoServer.DAO
             int toAccountId = GetAccountId(userToId);
 
             const string sql = "UPDATE accounts SET balance = (select accounts.balance + transfers.amount as [CurrentBalance] " +
-                "from accounts join transfers on accounts.account_id = transfers.account_from where transfer_id = @transferId) " +
+                "from accounts inner join transfers on accounts.account_id = transfers.account_to where transfer_id = @transferId) " +
                 "WHERE account_id = @accountTo";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -136,7 +136,7 @@ namespace TenmoServer.DAO
             int fromAccountId = GetAccountId(userFromId);
 
             const string sql = "UPDATE accounts SET balance = (select accounts.balance - transfers.amount as [CurrentBalance] " +
-                "from accounts join transfers on accounts.account_id = transfers.account_from where transfer_id = @transferId) " +
+                "from accounts inner join transfers on accounts.account_id = transfers.account_from where transfer_id = @transferId) " +
                 "WHERE account_id = @accountFrom";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -199,7 +199,10 @@ namespace TenmoServer.DAO
 
         public Transfer GetTransferDetails (int transferId)
         {
-            const string sql = "******";
+            const string sql = "SELECT t.transfer_id, t.account_from, uFrom.username AS 'From', t.account_to, uTo.username AS 'To', t.amount " +
+                "FROM transfers t INNER JOIN accounts aTo ON aTo.account_id = t.account_to INNER JOIN users uTo ON uTo.user_id = aTo.user_id " +
+                "INNER JOIN accounts aFrom ON aFrom.account_id = t.account_from INNER JOIN users uFrom ON uFrom.user_id = aFrom.user_id " +
+                "WHERE t.transfer_id = @transferId";
 
             Transfer transfer = new Transfer();
 
@@ -209,10 +212,9 @@ namespace TenmoServer.DAO
 
                 SqlCommand command = new SqlCommand(sql, conn);
 
-                //Need to add parameters
-                //command.Parameters.AddWithValue("@transferId", transferId);
-                //command.Parameters.AddWithValue("@accountTo", toAccountId);
-
+                
+                command.Parameters.AddWithValue("@transferId", transferId);
+                
                 SqlDataReader reader = command.ExecuteReader();
 
                 if (reader.HasRows)

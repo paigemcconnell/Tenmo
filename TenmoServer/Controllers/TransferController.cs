@@ -89,13 +89,15 @@ namespace TenmoServer.Controllers
             return Ok(transfers);
         }
 
-        [HttpGet("transfer/transferdetails")]
+        [HttpGet("transfer/transferdetails/{transferId}")]
         [Authorize]
         public ActionResult GetTransferDetails(int transferId)
         {
+            
+
             Transfer transfer = transferDAO.GetTransferDetails(transferId);
 
-            return Ok();
+            return Ok(transfer);
         }
 
 

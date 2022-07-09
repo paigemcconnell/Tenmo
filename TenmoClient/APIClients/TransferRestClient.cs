@@ -16,10 +16,10 @@ namespace TenmoClient.APIClients
         {
             this.client = new RestClient("https://localhost:44315/");
         }
-        private string token;
+        
         public void UpdateToken(string jwt)
         {
-            token = jwt;
+            
             if (jwt == null)
             {
                 client.Authenticator = null;
@@ -130,9 +130,9 @@ namespace TenmoClient.APIClients
             return response.Data;
         }
 
-        public Transfer GetTransferDetails()
+        public Transfer GetTransferDetails(int transferId)
         {
-            RestRequest request = new RestRequest("transfer/transferdetails");
+            RestRequest request = new RestRequest("transfer/transferdetails/" + transferId);
 
             IRestResponse<Transfer> response = client.Get<Transfer>(request);
 

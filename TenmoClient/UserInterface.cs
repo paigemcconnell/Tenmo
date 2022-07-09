@@ -227,22 +227,21 @@ namespace TenmoClient
 
         private Transfer GetTransferDetails(int transferId)
         {
-            GetTransferDetails(transferId);
 
-            Transfer transfer = transferClient.GetTransferDetails();
+            Transfer transfer = transferClient.GetTransferDetails(transferId);
 
             Console.WriteLine("-------------------------------------------");
             Console.WriteLine("Transfer Details");
             Console.WriteLine("--------------------------------------------");
-
+            
             Console.WriteLine("Id: " + transfer.TransferId);
             Console.WriteLine("From: " + transfer.UserFrom);
             Console.WriteLine("To: " + transfer.UserTo);
             Console.WriteLine("Type: Send");
             Console.WriteLine("Status: Approved");
-            Console.WriteLine("Amount: " + transfer.Amount);
-            Console.WriteLine();
-            return transfer;
+            Console.WriteLine("Amount: " + transfer.Amount.ToString("C"));
+            Console.WriteLine(); 
+            return transfer; 
         }
 
     }
