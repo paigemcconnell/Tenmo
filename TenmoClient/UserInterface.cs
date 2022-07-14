@@ -212,7 +212,7 @@ namespace TenmoClient
 
             Console.WriteLine("-------------------------------------------");
             Console.WriteLine("Transfers");
-            Console.WriteLine("ID     " + ("From:     ") + ("To:     ") + ("Amount:     "));
+            Console.WriteLine("ID       " + ("From:     ") + ("To:       ") + ("Amount:     "));
             Console.WriteLine("--------------------------------------------");
 
             foreach (Transfer transfer in transfers)

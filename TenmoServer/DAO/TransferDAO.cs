@@ -112,8 +112,8 @@ namespace TenmoServer.DAO
         {
             int toAccountId = GetAccountId(userToId);
 
-            const string sql = "UPDATE accounts SET balance = (select accounts.balance + transfers.amount as [CurrentBalance] " +
-                "from accounts inner join transfers on accounts.account_id = transfers.account_to where transfer_id = @transferId) " +
+            const string sql = "UPDATE accounts SET balance = (SELECT accounts.balance + transfers.amount as [CurrentBalance] " +
+                "FROM accounts INNER JOIN transfers ON accounts.account_id = transfers.account_to WHERE transfer_id = @transferId) " +
                 "WHERE account_id = @accountTo";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -136,7 +136,7 @@ namespace TenmoServer.DAO
             int fromAccountId = GetAccountId(userFromId);
 
             const string sql = "UPDATE accounts SET balance = (select accounts.balance - transfers.amount as [CurrentBalance] " +
-                "from accounts inner join transfers on accounts.account_id = transfers.account_from where transfer_id = @transferId) " +
+                "FROM accounts INNER JOIN transfers ON accounts.account_id = transfers.account_from WHERE transfer_id = @transferId) " +
                 "WHERE account_id = @accountFrom";
 
             using (SqlConnection conn = new SqlConnection(connectionString))

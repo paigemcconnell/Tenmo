@@ -93,8 +93,6 @@ namespace TenmoServer.Controllers
         [Authorize]
         public ActionResult GetTransferDetails(int transferId)
         {
-            
-
             Transfer transfer = transferDAO.GetTransferDetails(transferId);
 
             return Ok(transfer);
