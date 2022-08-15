@@ -64,3 +64,102 @@ INSERT INTO transfer_statuses (transfer_status_desc) VALUES ('Rejected');
 
 INSERT INTO transfer_types (transfer_type_desc) VALUES ('Request');
 INSERT INTO transfer_types (transfer_type_desc) VALUES ('Send');
+
+select username, user_id from users 
+
+select * from transfers
+BEGIN TRANSACTION
+
+INSERT INTO transfers (transfer_type_id, transfer_status_id, account_from, account_to, amount)
+Values (1001, 2001, 4000, 4001, 50)
+
+UPDATE accounts 
+SET balance = 
+	(select accounts.balance + transfers.amount as [CurrentBalance]
+	from accounts join transfers on accounts.account_id = transfers.account_from 
+	where transfer_id = @@IDENTITY)
+WHERE account_id = 4001
+
+Select * From accounts 
+
+ROLLBACK TRANSACTION
+
+Select * From Transfers 
+
+--subquery account from 
+select u.username
+from users u
+	inner join accounts a on a.user_id = u.user_id
+	inner join transfers t on t.account_from = a.account_id
+
+--subquery account to
+select u.username
+from users u
+	inner join accounts a on a.user_id = u.user_id
+	inner join transfers t on t.account_to = a.account_id
+
+
+--please work 
+select t.transfer_id, t.account_from, (select u.username
+from users u
+	inner join accounts a on a.user_id = u.user_id
+	inner join transfers t on t.account_from = a.account_id) as 'From' , t.account_to, (select u.username
+from users u
+	inner join accounts a on a.user_id = u.user_id
+	inner join transfers t on t.account_to = a.account_id) as 'To', t.amount
+From transfers t
+		inner join accounts a on a.account_id = t.account_from
+		inner join users u on u.user_id = a.user_id
+
+Union all
+
+select t.transfer_id, t.account_from, (select u.username
+from users u
+	inner join accounts a on a.user_id = u.user_id
+	inner join transfers t on t.account_from = a.account_id) as 'From' , t.account_to, (select u.username
+from users u
+	inner join accounts a on a.user_id = u.user_id
+	inner join transfers t on t.account_to = a.account_id) as 'To', t.amount
+From transfers t
+		inner join accounts a on a.account_id = t.account_to
+		inner join users u on u.user_id = a.user_id
+
+
+
+
+select t.transfer_id, t.account_from, u.username as 'From' , t.account_to, u.username as 'To', t.amount
+From transfers t
+		inner join accounts a on a.account_id = t.account_from  OR a.account_id = t.account_to
+		inner join users u on u.user_id = a.user_id
+
+Union 
+
+select t.transfer_id, t.account_from, u.username as 'From' , t.account_to, u.username as 'To', t.amount
+From transfers t
+		inner join accounts a on a.account_id = t.account_to OR a.account_id = t.account_to
+		inner join users u on u.user_id = a.user_id
+
+
+select * from accounts
+
+
+select * from transfers
+
+
+SELECT t.transfer_id, t.account_from, uFrom.username AS 'From', t.account_to, uTo.username AS 'To', t.amount 
+                FROM transfers t INNER JOIN accounts aTo ON aTo.account_id = t.account_to INNER JOIN users uTo ON uTo.user_id = aTo.user_id 
+                INNER JOIN accounts aFrom ON aFrom.account_id = t.account_from INNER JOIN users uFrom ON uFrom.user_id = aFrom.user_id 
+                WHERE t.transfer_id = 5001
+				
+				INSERT INTO transfers (transfer_type_id, transfer_status_id, account_from, account_to, amount)
+Values (1001, 2001, 4000, 4001, 50)
+
+
+
+				UPDATE accounts SET balance = (select balance + amount as [CurrentBalance] 
+                from accounts join transfers  on account_id = account_from where transfer_id = @@IDENTITY) 
+                WHERE 
+Select * From transfers
+
+Select * from accounts
+				
